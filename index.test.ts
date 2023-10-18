@@ -60,4 +60,34 @@ describe('builderFactory/1', () => {
       age: 30,
     })
   })
+
+  test('generate test data with attrs', () => {
+    const buildUser = builderFactory<User>((attrs) => {
+      const [type, _] = pop(attrs, "type")
+
+      const age = type === "child" ? 10 : 30
+
+      return {
+        id: null,
+        name: "name",
+        age: age,
+      }
+    })
+
+    const user = buildUser({ type: "child" })
+
+    expect(user).toEqual({
+      id: null,
+      name: "name",
+      age: 10,
+    })
+  })
 })
+
+function pop(obj: any, key: string) {
+  const value = obj[key];
+
+  delete obj[key];
+
+  return [value, obj];
+}
