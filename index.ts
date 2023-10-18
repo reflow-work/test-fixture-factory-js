@@ -1,1 +1,5 @@
-console.log("Hello via Bun!");
+export function builderFactory<R>(generator: () => R) {
+  return () => {
+    return generator()
+  }
+}
