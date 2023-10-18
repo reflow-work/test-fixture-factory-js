@@ -4,9 +4,13 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
+    "@types/lodash-es": "^4.17.9",
     "bun-types": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
   }
 }
