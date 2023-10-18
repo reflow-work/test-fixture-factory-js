@@ -8,7 +8,7 @@ type User = {
 }
 
 describe('builderFactory/1', () => {
-  test('with static value generator', () => {
+  test('generate test data with generator', () => {
     const buildUser = builderFactory<User>(() => {
       return {
         id: null,
@@ -24,5 +24,22 @@ describe('builderFactory/1', () => {
       name: "name",
       age: 30,
     })
+  })
+
+  test('generate test data with generator dynamically', () => {
+    const buildUser = builderFactory<User>(() => {
+      return {
+        id: null,
+        name: "name",
+        age: Math.random(),
+      }
+    })
+
+    const user0 = buildUser()
+    const user1 = buildUser()
+
+    expect(user0.age).not.toEqual(user1.age)
+    expect(user0.age).toBeGreaterThanOrEqual(0)
+    expect(user0.age).toBeLessThanOrEqual(1)
   })
 })
