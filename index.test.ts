@@ -42,4 +42,22 @@ describe('builderFactory/1', () => {
     expect(user0.age).toBeGreaterThanOrEqual(0)
     expect(user0.age).toBeLessThanOrEqual(1)
   })
+
+  test('merge generated test data with given attrs', () => {
+    const buildUser = builderFactory<User>(() => {
+      return {
+        id: null,
+        name: "name",
+        age: 30,
+      }
+    })
+
+    const user = buildUser({ name: "new name" })
+
+    expect(user).toEqual({
+      id: null,
+      name: "new name",
+      age: 30,
+    })
+  })
 })
