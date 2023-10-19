@@ -1,11 +1,13 @@
 import { merge as _merge } from 'lodash-es'
 
-export function builderFactory<R>(generator: (attrs: any) => R) {
-  return (attrs: any = {}) => {
-    return merge(generator(attrs), attrs)
-  }
-}
+export default class TestFixtureFactory<T> {
+  constructor(private generator: (attrs: any) => T) {}
 
-function merge<R>(testData: R, attrs: Object): R {
-  return _merge({}, testData, attrs)
+  create(attrs: any = {}): T {
+    return this.merge(this.generator(attrs), attrs)
+  }
+
+  private merge(testData: T, attrs: Object): T {
+    return _merge({}, testData, attrs)
+  }
 }

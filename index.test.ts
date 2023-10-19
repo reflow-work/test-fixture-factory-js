@@ -1,93 +1,95 @@
 import { describe, test, expect } from 'bun:test'
-import { builderFactory } from './index'
+import TestFixtureFactory from './index'
 
 type User = {
-  id: number | null;
-  name: string;
-  age: number;
+  id: number | null
+  name: string
+  age: number
 }
 
-describe('builderFactory/1', () => {
-  test('generate test data with generator', () => {
-    const buildUser = builderFactory<User>(() => {
-      return {
+describe('TestFixtureFactory', () => {
+  describe('create function', () => {
+    test('generates test data with generator', () => {
+      const userFixture = new TestFixtureFactory<User>(() => {
+        return {
+          id: null,
+          name: 'name',
+          age: 30,
+        }
+      })
+
+      const user = userFixture.create()
+
+      expect(user).toEqual({
         id: null,
-        name: "name",
+        name: 'name',
         age: 30,
-      }
+      })
     })
 
-    const user = buildUser()
+    test('generates test data with generator dynamically', () => {
+      const userFixture = new TestFixtureFactory<User>(() => {
+        return {
+          id: null,
+          name: 'name',
+          age: Math.random(),
+        }
+      })
 
-    expect(user).toEqual({
-      id: null,
-      name: "name",
-      age: 30,
+      const user0 = userFixture.create()
+      const user1 = userFixture.create()
+
+      expect(user0.age).not.toEqual(user1.age)
+      expect(user0.age).toBeGreaterThanOrEqual(0)
+      expect(user0.age).toBeLessThanOrEqual(1)
     })
-  })
 
-  test('generate test data with generator dynamically', () => {
-    const buildUser = builderFactory<User>(() => {
-      return {
+    test('merges generated test data with given attrs', () => {
+      const userFixture = new TestFixtureFactory<User>(() => {
+        return {
+          id: null,
+          name: 'name',
+          age: 30,
+        }
+      })
+
+      const user = userFixture.create({ name: 'new name' })
+
+      expect(user).toEqual({
         id: null,
-        name: "name",
-        age: Math.random(),
-      }
-    })
-
-    const user0 = buildUser()
-    const user1 = buildUser()
-
-    expect(user0.age).not.toEqual(user1.age)
-    expect(user0.age).toBeGreaterThanOrEqual(0)
-    expect(user0.age).toBeLessThanOrEqual(1)
-  })
-
-  test('merge generated test data with given attrs', () => {
-    const buildUser = builderFactory<User>(() => {
-      return {
-        id: null,
-        name: "name",
+        name: 'new name',
         age: 30,
-      }
+      })
     })
 
-    const user = buildUser({ name: "new name" })
+    test('generates test data with attrs', () => {
+      const userFixture = new TestFixtureFactory<User>((attrs) => {
+        const [type, _] = pop(attrs, 'type')
 
-    expect(user).toEqual({
-      id: null,
-      name: "new name",
-      age: 30,
-    })
-  })
+        const age = type === 'child' ? 10 : 30
 
-  test('generate test data with attrs', () => {
-    const buildUser = builderFactory<User>((attrs) => {
-      const [type, _] = pop(attrs, "type")
+        return {
+          id: null,
+          name: 'name',
+          age: age,
+        }
+      })
 
-      const age = type === "child" ? 10 : 30
+      const user = userFixture.create({ type: 'child' })
 
-      return {
+      expect(user).toEqual({
         id: null,
-        name: "name",
-        age: age,
-      }
-    })
-
-    const user = buildUser({ type: "child" })
-
-    expect(user).toEqual({
-      id: null,
-      name: "name",
-      age: 10,
+        name: 'name',
+        age: 10,
+      })
     })
   })
 })
 
 function pop(obj: any, key: string) {
-  const value = obj[key];
+  const value = obj[key]
 
-  delete obj[key];
+  delete obj[key]
 
-  return [value, obj];
+  return [value, obj]
 }
