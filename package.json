@@ -1,5 +1,5 @@
 {
-  "name": "@reflow-work/test-data-factory",
+  "name": "@reflow-work/test-fixture-factory",
   "version": "0.2.0",
   "module": "index.ts",
   "type": "module",
