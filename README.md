@@ -1,4 +1,4 @@
-# @reflow-work/test-data-factory
+# @reflow-work/test-fixture-factory
 
 To install dependencies:
 
