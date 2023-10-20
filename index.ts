@@ -1,7 +1,7 @@
 import { merge as _merge } from 'lodash-es'
 
-export function builderFactory<R>(generator: (attrs: any) => R) {
-  return (attrs: any = {}) => {
+export function builderFactory<R>(generator: (attrs: Object) => R): ((attrs?: {}) => R) {
+  return (attrs: Object = {}): R => {
     return merge(generator(attrs), attrs)
   }
 }
