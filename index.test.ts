@@ -82,6 +82,24 @@ describe('builderFactory/1', () => {
       age: 10,
     })
   })
+
+  test('fields of attrs which is not in the type should be ignored', () => {
+    const buildUser = builderFactory<User>(() => {
+      return {
+        id: null,
+        name: "name",
+        age: 30,
+      }
+    })
+
+    const user = buildUser({ invalid_field: "invalid" })
+
+    expect(user).toEqual({
+      id: null,
+      name: "name",
+      age: 30,
+    })
+  })
 })
 
 function pop(obj: any, key: string) {
