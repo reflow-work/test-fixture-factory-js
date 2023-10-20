@@ -1,14 +1,12 @@
 import { merge as _merge } from 'lodash-es'
 
-export function builderFactory<R extends Object>(generator: (attrs: Object) => R): ((attrs?: {}) => R) {
-  return (attrs: Object = {}): R => {
-    return merge<R>(generator(attrs), attrs)
+export class FixtureFactory<R extends Object> {
+  constructor(private generator: (attrs: Object) => R) { }
+
+  create(attrs: Object = {}): R {
+    return merge<R>(this.generator(attrs), attrs)
   }
 }
-
-// function merge<R>(testData: R, attrs: Object): R {
-//   return _merge({}, testData, attrs)
-// }
 
 function merge<T extends Object>(obj1: T, obj2: Object): T {
   const result = { ...obj1 };  // obj1의 복사본 생성

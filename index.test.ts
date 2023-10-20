@@ -1,15 +1,15 @@
 import { describe, test, expect } from 'bun:test'
-import { builderFactory } from './index'
+import { FixtureFactory } from './index'
 
 type User = {
-  id: number | null;
-  name: string;
-  age: number;
+  id: number | null
+  name: string
+  age: number
 }
 
-describe('builderFactory/1', () => {
+describe('FixtureFactory', () => {
   test('generate test data with generator', () => {
-    const buildUser = builderFactory<User>(() => {
+    const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
         name: "name",
@@ -17,7 +17,7 @@ describe('builderFactory/1', () => {
       }
     })
 
-    const user = buildUser()
+    const user = userFactory.create()
 
     expect(user).toEqual({
       id: null,
@@ -27,7 +27,7 @@ describe('builderFactory/1', () => {
   })
 
   test('generate test data with generator dynamically', () => {
-    const buildUser = builderFactory<User>(() => {
+    const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
         name: "name",
@@ -35,8 +35,8 @@ describe('builderFactory/1', () => {
       }
     })
 
-    const user0 = buildUser()
-    const user1 = buildUser()
+    const user0 = userFactory.create()
+    const user1 = userFactory.create()
 
     expect(user0.age).not.toEqual(user1.age)
     expect(user0.age).toBeGreaterThanOrEqual(0)
@@ -44,7 +44,7 @@ describe('builderFactory/1', () => {
   })
 
   test('merge generated test data with given attrs', () => {
-    const buildUser = builderFactory<User>(() => {
+    const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
         name: "name",
@@ -52,7 +52,7 @@ describe('builderFactory/1', () => {
       }
     })
 
-    const user = buildUser({ name: "new name" })
+    const user = userFactory.create({ name: "new name" })
 
     expect(user).toEqual({
       id: null,
@@ -62,7 +62,7 @@ describe('builderFactory/1', () => {
   })
 
   test('generate test data with attrs', () => {
-    const buildUser = builderFactory<User>((attrs) => {
+    const userFactory = new FixtureFactory<User>((attrs) => {
       const [type, _] = pop(attrs, "type")
 
       const age = type === "child" ? 10 : 30
@@ -74,7 +74,7 @@ describe('builderFactory/1', () => {
       }
     })
 
-    const user = buildUser({ type: "child" })
+    const user = userFactory.create({ type: "child" })
 
     expect(user).toEqual({
       id: null,
@@ -84,7 +84,7 @@ describe('builderFactory/1', () => {
   })
 
   test('fields of attrs which is not in the type should be ignored', () => {
-    const buildUser = builderFactory<User>(() => {
+    const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
         name: "name",
@@ -92,7 +92,7 @@ describe('builderFactory/1', () => {
       }
     })
 
-    const user = buildUser({ invalid_field: "invalid" })
+    const user = userFactory.create({ invalid_field: "invalid" })
 
     expect(user).toEqual({
       id: null,
