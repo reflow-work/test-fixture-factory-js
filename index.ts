@@ -1,5 +1,3 @@
-import { merge as _merge } from 'lodash-es'
-
 export class FixtureFactory<R extends Object> {
   constructor(private generator: (attrs: Object) => R) { }
 
