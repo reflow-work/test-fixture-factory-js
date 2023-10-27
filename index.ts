@@ -1,9 +1,16 @@
 export class FixtureFactory<T extends NonNullable<any>> {
-  constructor(private generator: (overrides: any) => T) {}
+  constructor(
+    private generator: (input: any) => T,
+    private mutator: (original: T, input: any) => T = merge
+  ) {}
 
-  create(overrides?: any): T {
-    return merge<T>(this.generator(overrides), overrides);
+  create(input?: any): T {
+    return this.mutator(this.generator(input), input);
   }
+}
+
+export function identity(value: any) {
+  return value;
 }
 
 function merge<T>(original: T, overrides: any): T {

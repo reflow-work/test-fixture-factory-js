@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { FixtureFactory } from './index';
+import { FixtureFactory, identity } from './index';
 
 type User = {
   id: number | null;
@@ -91,6 +91,23 @@ describe('FixtureFactory', () => {
       name: 'name',
       age: 10,
     });
+  });
+
+  test('generate test data with custom mutator', () => {
+    const integerFactory = new FixtureFactory<number>(
+      ({ min, max }: { min?: number; max?: number }) => {
+        const minNumber = min ?? 0;
+        const maxNumber = max ?? Number.MAX_SAFE_INTEGER;
+
+        return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
+      },
+      identity
+    );
+
+    const number = integerFactory.create({ min: 0, max: 10 });
+
+    expect(number).toBeGreaterThanOrEqual(0);
+    expect(number).toBeLessThanOrEqual(10);
   });
 
   test('fields of attrs which is not in the type should be ignored', () => {
