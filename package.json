@@ -3,6 +3,10 @@
   "version": "1.2.0",
   "module": "index.ts",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reflow-work/test-fixture-factory-js"
+  },
   "devDependencies": {
     "bun-types": "latest"
   },
