@@ -8,7 +8,7 @@ type User = {
 };
 
 describe('FixtureFactory', () => {
-  test('generate test data with generator', () => {
+  test('generate test object data with generator', () => {
     const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
@@ -24,6 +24,16 @@ describe('FixtureFactory', () => {
       name: 'name',
       age: 30,
     });
+  });
+
+  test('generate test number data with generator', () => {
+    const numberFactory = new FixtureFactory<number>(() => {
+      return 1;
+    });
+
+    const number = numberFactory.create();
+
+    expect(number).toEqual(1);
   });
 
   test('generate test data with generator dynamically', () => {
