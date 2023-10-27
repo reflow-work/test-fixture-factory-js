@@ -19,19 +19,17 @@ export class FixtureFactory<T extends NonNullable<any>> {
   }
 }
 
-export function identity(value: any) {
-  return value;
-}
-
 function merge<T>(original: T, overrides: any): T {
   if (overrides === undefined) {
     return original;
   }
 
-  if (typeof original === 'object') {
+  if (typeof original === 'object' && typeof overrides === 'object') {
     return mergeObject(original as any, overrides as Partial<any>);
-  } else {
+  } else if (typeof original === typeof overrides) {
     return overrides;
+  } else {
+    return original;
   }
 }
 

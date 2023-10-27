@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { FixtureFactory, identity } from './index';
+import { FixtureFactory } from './index';
 
 type User = {
   id: number | null;
@@ -100,8 +100,7 @@ describe('FixtureFactory.create/1', () => {
         const maxNumber = max ?? Number.MAX_SAFE_INTEGER;
 
         return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
-      },
-      identity
+      }
     );
 
     const number = integerFactory.create({ min: 0, max: 10 });
