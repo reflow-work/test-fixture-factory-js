@@ -7,6 +7,16 @@ export class FixtureFactory<T extends NonNullable<any>> {
   create(input?: any): T {
     return this.mutator(this.generator(input), input);
   }
+
+  createList(count: number, inputs: any[] = []): T[] {
+    let result = [];
+
+    for (let i = 0; i < count; i++) {
+      result.push(this.create(inputs[i]));
+    }
+
+    return result;
+  }
 }
 
 export function identity(value: any) {

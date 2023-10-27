@@ -7,7 +7,7 @@ type User = {
   age: number;
 };
 
-describe('FixtureFactory', () => {
+describe('FixtureFactory.create/1', () => {
   test('generate test object data with generator', () => {
     const userFactory = new FixtureFactory<User>(() => {
       return {
@@ -126,6 +126,58 @@ describe('FixtureFactory', () => {
       name: 'name',
       age: 30,
     });
+  });
+});
+
+describe('FixtureFactory.createList/2', () => {
+  test('generate test object data list with generator', () => {
+    const userFactory = new FixtureFactory<User>(() => {
+      return {
+        id: null,
+        name: 'name',
+        age: 30,
+      };
+    });
+
+    const users = userFactory.createList(2);
+
+    expect(users).toEqual([
+      {
+        id: null,
+        name: 'name',
+        age: 30,
+      },
+      {
+        id: null,
+        name: 'name',
+        age: 30,
+      },
+    ]);
+  });
+
+  test('merge generated test data list with given attrs', () => {
+    const userFactory = new FixtureFactory<User>(() => {
+      return {
+        id: null,
+        name: 'name',
+        age: 30,
+      };
+    });
+
+    const users = userFactory.createList(2, [{ name: 'new name' }]);
+
+    expect(users).toEqual([
+      {
+        id: null,
+        name: 'new name',
+        age: 30,
+      },
+      {
+        id: null,
+        name: 'name',
+        age: 30,
+      },
+    ]);
   });
 });
 
