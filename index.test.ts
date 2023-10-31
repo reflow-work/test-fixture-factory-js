@@ -93,7 +93,7 @@ describe('FixtureFactory.create/1', () => {
     });
   });
 
-  test('generate test data with custom mutator', () => {
+  test('generate test data with custom generator', () => {
     const integerFactory = new FixtureFactory<number>(
       ({ min, max }: { min?: number; max?: number }) => {
         const minNumber = min ?? 0;
