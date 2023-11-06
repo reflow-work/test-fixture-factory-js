@@ -1,6 +1,6 @@
 export class FixtureFactory<T extends NonNullable<any>> {
   constructor(
-    private generator: (input: any) => T,
+    private generator: (input: any) => Required<T>,
     private mutator: (original: T, input: any) => T = merge
   ) {}
 
