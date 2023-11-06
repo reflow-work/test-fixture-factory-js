@@ -1,7 +1,7 @@
 {
   "name": "@reflow-work/test-fixture-factory",
   "description": "Create test fixtures easily!",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
