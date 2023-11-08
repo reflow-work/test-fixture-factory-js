@@ -7,6 +7,18 @@ type User = {
   age: number;
 };
 
+class UserClass {
+  constructor(
+    public id: number | null,
+    public name: string,
+    public age: number
+  ) {}
+
+  get isAdult() {
+    return this.age >= 20;
+  }
+}
+
 describe('FixtureFactory.create/1', () => {
   test('generate test object data with generator', () => {
     const userFactory = new FixtureFactory<User>(() => {
@@ -53,7 +65,7 @@ describe('FixtureFactory.create/1', () => {
     expect(user0.age).toBeLessThanOrEqual(1);
   });
 
-  test('merge generated test data with given attrs', () => {
+  test('merge generated test object with given attrs', () => {
     const userFactory = new FixtureFactory<User>(() => {
       return {
         id: null,
@@ -69,6 +81,19 @@ describe('FixtureFactory.create/1', () => {
       name: 'new name',
       age: 30,
     });
+  });
+
+  test('merge generated test instance with given attrs', () => {
+    const userFactory = new FixtureFactory<UserClass>(() => {
+      return new UserClass(null, 'name', 30);
+    });
+
+    const user = userFactory.create({ name: 'new name' });
+
+    expect(user.id).toEqual(null);
+    expect(user.name).toEqual('new name');
+    expect(user.age).toEqual(30);
+    expect(user.isAdult).toEqual(true);
   });
 
   test('generate test data with attrs', () => {

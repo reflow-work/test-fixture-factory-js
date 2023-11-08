@@ -34,11 +34,13 @@ function merge<T>(original: T, overrides: any): T {
 }
 
 function mergeObject<T extends object>(obj1: T, obj2: Partial<T>): T {
-  const result = { ...obj1 }; // obj1의 복사본 생성
-  for (const key in result) {
-    if (key in obj2) {
-      (result as any)[key] = (obj2 as any)[key];
-    }
-  }
-  return result;
+  const filteredObj2 = filteredObject(obj2, Object.keys(obj1));
+
+  return Object.assign(obj1, filteredObj2);
+}
+
+function filteredObject(obj: object, keys: string[]): object {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key]) => keys.includes(key))
+  );
 }
