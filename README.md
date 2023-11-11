@@ -7,7 +7,7 @@ This library is inspired by [Ecto Test factories](https://hexdocs.pm/ecto/test-f
 ## Install
 
 ```
-npm install --save-dev @@reflow-work/test-fixture-factory
+npm install --save-dev @reflow-work/test-fixture-factory
 ```
 
 ## Usage
