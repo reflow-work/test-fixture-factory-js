@@ -89,6 +89,21 @@ const userFactory = new FixtureFactory<User>(() => {
 });
 ```
 
+When creating a `FixtureFactory` using a class, you should use `| undefined = undefined` to the fields instead of `?`(optional). This is because the generator is set to return `Required<T>`. This prevents merging non-existent keys when overriding `attrs`.
+
+See also [When to use typescript optional property? How is it different from declaring property as undefined](https://kate-dev.medium.com/when-to-use-typescript-optional-property-how-is-it-different-from-declaring-property-as-undefined-2319a0ee1f07)
+
+```typescript
+class User {
+  constructor(
+    public name: string,
+    public age: number | undefined = undefined // instead of `number?`
+  );
+}
+
+const userFactory = new FixtureFactory<User>(() => ...)
+```
+
 ## Contributing
 
 To install dependencies:
