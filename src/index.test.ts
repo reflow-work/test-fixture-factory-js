@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'bun:test';
 import { FixtureFactory } from './index';
 
-type User = {
+type UserType = {
   id: number | null;
   name: string;
   age: number;
@@ -21,7 +21,7 @@ class UserClass {
 
 describe('FixtureFactory.create/1', () => {
   test('generate test object data with generator', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
@@ -49,7 +49,7 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('generate test data with generator dynamically', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
@@ -66,7 +66,7 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('merge generated test object with given attrs', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
@@ -97,7 +97,7 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('generate test data with attrs', () => {
-    const userFactory = new FixtureFactory<User>((attrs) => {
+    const userFactory = new FixtureFactory<UserType>((attrs) => {
       const [type, _] = pop(attrs, 'type');
 
       const age = type === 'child' ? 10 : 30;
@@ -135,7 +135,7 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('fields of attrs which is not in the type should be ignored', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
@@ -155,7 +155,7 @@ describe('FixtureFactory.create/1', () => {
 
 describe('FixtureFactory.createList/2', () => {
   test('generate test object data list with generator', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
@@ -180,7 +180,7 @@ describe('FixtureFactory.createList/2', () => {
   });
 
   test('merge generated test data list with given attrs', () => {
-    const userFactory = new FixtureFactory<User>(() => {
+    const userFactory = new FixtureFactory<UserType>(() => {
       return {
         id: null,
         name: 'name',
