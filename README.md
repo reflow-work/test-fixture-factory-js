@@ -15,12 +15,12 @@ npm install --save-dev @reflow-work/test-fixture-factory
 ```typescript
 import { FixtureFactory } from '@reflow-work/test-fixture-factory';
 
-type User = {
+type UserType = {
   name: string;
   age: number;
 };
 
-const userFactory = new FixtureFactory<User>(() => {
+const userFactory = new FixtureFactory<UserType>(() => {
   return { name: 'name', age: 30 };
 });
 
@@ -48,19 +48,20 @@ const [user4, user5] = userFactory.createList(2, [
 // [{ name: 'new name', age: 30 }, { name: 'name', age: 40 }]
 ```
 
-You can make more complicated fixture factory with attributes of generator.
+You can make more complicated fixture factory with custom attributes of generator.
 
 ```typescript
 import { FixtureFactory } from '@reflow-work/test-fixture-factory';
 
-const integerFactory = new FixtureFactory<number>(
-  ({ min, max }: { min?: number; max?: number }) => {
-    const minNumber = min ?? 0;
-    const maxNumber = max ?? Number.MAX_SAFE_INTEGER;
+const integerFactory = new FixtureFactory<
+  number,
+  { min: number | undefined; max: number | undefined }
+>((attrs) => {
+  const minNumber = attrs?.min ?? 0;
+  const maxNumber = attrs?.max ?? Number.MAX_SAFE_INTEGER;
 
-    return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
-  }
-);
+  return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
+});
 
 const number = integerFactory.create({ min: 0, max: 10 });
 ```
@@ -70,22 +71,26 @@ You can also composite those factories.
 ```typescript
 import { FixtureFactory } from '@reflow-work/test-fixture-factory';
 
-type User = {
+type UserType = {
   name: string;
   age: number;
 };
 
-const integerFactory = new FixtureFactory<number>(
-  ({ min, max }: { min?: number; max?: number }) => {
-    const minNumber = min ?? 0;
-    const maxNumber = max ?? Number.MAX_SAFE_INTEGER;
+const integerFactory = new FixtureFactory<
+  number,
+  { min: number | undefined; max: number | undefined }
+>((attrs) => {
+  const minNumber = attrs?.min ?? 0;
+  const maxNumber = attrs?.max ?? Number.MAX_SAFE_INTEGER;
 
-    return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
-  }
-);
+  return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
+});
 
-const userFactory = new FixtureFactory<User>(() => {
-  return { name: 'name', age: integerFactory.create({ min: 0, max: 100 }) };
+const userFactory = new FixtureFactory<UserType>(() => {
+  return {
+    name: 'name',
+    age: integerFactory.create({ min: 0, max: 100 }),
+  };
 });
 ```
 
@@ -94,15 +99,17 @@ When creating a `FixtureFactory` using a class, you should use `| undefined = un
 See also [When to use typescript optional property? How is it different from declaring property as undefined](https://kate-dev.medium.com/when-to-use-typescript-optional-property-how-is-it-different-from-declaring-property-as-undefined-2319a0ee1f07)
 
 ```typescript
-class User {
+class UserClass {
   constructor(
     public name: string,
     public age: number | undefined = undefined // instead of `number?`
   );
 }
 
-const userFactory = new FixtureFactory<User>(() => ...)
+const userFactory = new FixtureFactory<UserClass>(() => ...)
 ```
+
+For more information, see also [test codes](./src/index.test.ts)
 
 ## Contributing
 
