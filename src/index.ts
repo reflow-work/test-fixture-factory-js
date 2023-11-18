@@ -1,14 +1,16 @@
-export class FixtureFactory<T extends NonNullable<any>> {
+type Undefinedable<T> = T | undefined;
+
+export class FixtureFactory<T extends NonNullable<any>, R = Partial<T>> {
   constructor(
-    private generator: (input: any) => Required<T>,
-    private mutator: (original: T, input: any) => T = merge
+    private generator: (input: Undefinedable<R>) => Required<T>,
+    private mutator: (original: T, input: Undefinedable<R>) => T = merge
   ) {}
 
-  create(input?: any): T {
+  create(input: Undefinedable<R> = undefined): T {
     return this.mutator(this.generator(input), input);
   }
 
-  createList(count: number, inputs: any[] = []): T[] {
+  createList(count: number, inputs: Undefinedable<R>[] = []): T[] {
     let result = [];
 
     for (let i = 0; i < count; i++) {
@@ -19,15 +21,16 @@ export class FixtureFactory<T extends NonNullable<any>> {
   }
 }
 
-function merge<T>(original: T, overrides: any): T {
+function merge<T, R>(original: T, overrides: Undefinedable<R>): T {
   if (overrides === undefined) {
     return original;
   }
 
   if (typeof original === 'object' && typeof overrides === 'object') {
-    return mergeObject(original as any, overrides as Partial<any>);
+    // TODO: fix types
+    return mergeObject(original as any, overrides as any);
   } else if (typeof original === typeof overrides) {
-    return overrides;
+    return overrides as T;
   } else {
     return original;
   }

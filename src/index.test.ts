@@ -96,11 +96,12 @@ describe('FixtureFactory.create/1', () => {
     expect(user.isAdult).toEqual(true);
   });
 
-  test('generate test data with attrs', () => {
-    const userFactory = new FixtureFactory<UserType>((attrs) => {
-      const [type, _] = pop(attrs, 'type');
-
-      const age = type === 'child' ? 10 : 30;
+  test('generate test data with custom attrs', () => {
+    const userFactory = new FixtureFactory<
+      UserType,
+      Partial<UserType> & { type: string }
+    >((attrs) => {
+      const age = attrs?.type === 'child' ? 10 : 30;
 
       return {
         id: null,
@@ -109,24 +110,25 @@ describe('FixtureFactory.create/1', () => {
       };
     });
 
-    const user = userFactory.create({ type: 'child' });
+    const user = userFactory.create({ type: 'child', name: 'new name' });
 
     expect(user).toEqual({
       id: null,
-      name: 'name',
+      name: 'new name',
       age: 10,
     });
   });
 
   test('generate test data with custom generator', () => {
-    const integerFactory = new FixtureFactory<number>(
-      ({ min, max }: { min?: number; max?: number }) => {
-        const minNumber = min ?? 0;
-        const maxNumber = max ?? Number.MAX_SAFE_INTEGER;
+    const integerFactory = new FixtureFactory<
+      number,
+      { min: number | undefined; max: number | undefined }
+    >((attrs) => {
+      const minNumber = attrs?.min ?? 0;
+      const maxNumber = attrs?.max ?? Number.MAX_SAFE_INTEGER;
 
-        return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
-      }
-    );
+      return Math.floor(Math.random() * (maxNumber - minNumber)) + minNumber;
+    });
 
     const number = integerFactory.create({ min: 0, max: 10 });
 
@@ -135,13 +137,15 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('fields of attrs which is not in the type should be ignored', () => {
-    const userFactory = new FixtureFactory<UserType>(() => {
-      return {
-        id: null,
-        name: 'name',
-        age: 30,
-      };
-    });
+    const userFactory = new FixtureFactory<UserType, { invalid_field: string }>(
+      () => {
+        return {
+          id: null,
+          name: 'name',
+          age: 30,
+        };
+      }
+    );
 
     const user = userFactory.create({ invalid_field: 'invalid' });
 
@@ -204,11 +208,3 @@ describe('FixtureFactory.createList/2', () => {
     ]);
   });
 });
-
-function pop(obj: any, key: string) {
-  const value = obj[key];
-
-  delete obj[key];
-
-  return [value, obj];
-}
