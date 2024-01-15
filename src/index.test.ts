@@ -97,18 +97,17 @@ describe('FixtureFactory.create/1', () => {
   });
 
   test('generate test data with custom attrs', () => {
-    const userFactory = new FixtureFactory<
-      UserType,
-      Partial<UserType> & { type: string }
-    >((attrs) => {
-      const age = attrs?.type === 'child' ? 10 : 30;
+    const userFactory = new FixtureFactory<UserType, { type: string }>(
+      (attrs) => {
+        const age = attrs?.type === 'child' ? 10 : 30;
 
-      return {
-        id: null,
-        name: 'name',
-        age: age,
-      };
-    });
+        return {
+          id: null,
+          name: 'name',
+          age: age,
+        };
+      }
+    );
 
     const user = userFactory.create({ type: 'child', name: 'new name' });
 
