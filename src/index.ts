@@ -1,16 +1,19 @@
 type Undefinedable<T> = T | undefined;
+type Input<T, R> = Undefinedable<
+  T extends { [key: string]: unknown } ? Partial<T> & R : R
+>;
 
-export class FixtureFactory<T extends NonNullable<any>, R = Partial<T>> {
+export class FixtureFactory<T extends NonNullable<any>, R = unknown> {
   constructor(
-    private generator: (input: Undefinedable<R>) => Required<T>,
-    private mutator: (original: T, input: Undefinedable<R>) => T = merge
+    private generator: (input: Input<T, R>) => Required<T>,
+    private mutator: (original: T, input: Input<T, R>) => T = merge
   ) {}
 
-  create(input: Undefinedable<R> = undefined): T {
+  create(input: Input<T, R> = undefined): T {
     return this.mutator(this.generator(input), input);
   }
 
-  createList(count: number, inputs: Undefinedable<R>[] = []): T[] {
+  createList(count: number, inputs: Input<T, R>[] = []): T[] {
     let result = [];
 
     for (let i = 0; i < count; i++) {
